@@ -8,10 +8,12 @@ import paho.mqtt.client as mqtt
 
 # Parameters
 qos_level = 2
+pub_period = 1.0  # [s]
 
 
 # Global variables
 stop_flag = Event()
+count = 0
 
 
 # Parse the command-line arguments
@@ -48,12 +50,12 @@ client.loop_start()
 
 
 # Publish a message every second with QoS level 2
-while not stop_flag.wait(1.0):
+while not stop_flag.wait(pub_period):
 
     print(f"Client is connected: {client.is_connected()}")
-
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    message = f"Hello World! {timestamp}"
+    count += 1
+    message = f"{count} Hello World! {timestamp}"
     (rc, mid) = client.publish("topic_test", message, qos=qos_level)
     if rc != mqtt.MQTT_ERR_SUCCESS:
         print(f"Error publishing message: {rc}")
