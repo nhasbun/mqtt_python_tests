@@ -36,6 +36,11 @@ def on_log(client, userdata, level, buf):
 def on_message(client, userdata, msg):
     print(msg.topic + " " + str(msg.payload))
 
+    # Storing data so we can check for data loss easily
+    with open('incoming.txt', 'a') as file:
+        file.write(f'{msg.payload}\n')
+
+
 
 def on_subscribe(client, userdata, mid, granted_qos):
     print("Subscribed to MQTT topic")
@@ -66,7 +71,7 @@ listener.start()
 
 # Main loop of the script
 while True:
-    
+
     # Exit the loop if the "esc" key is pressed
     if not listener.running:
         break
